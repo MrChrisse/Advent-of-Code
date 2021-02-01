@@ -9,6 +9,7 @@ public class Day1 {
     public static void main(String[] args) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader("2020/src/Day1/numbers.txt"));
         List<String> lines = new ArrayList<>();
+        System.out.println("Test");
         String line;
         while((line =bufferedReader.readLine()) != null){
             lines.add(line);
