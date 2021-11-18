@@ -2,51 +2,261 @@ package Day11;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Day11 {
-    private static ArrayList<String> lines;
+    private static char[][] seats;
+    private static int rows = 97;
+    private static int cols = 91;
 
     public static void main(String[] args) throws FileNotFoundException {
-        Scanner s = new Scanner(new File("Advent_Of_Code/2020/src/Day11/input_day11.txt"));
-        lines = new ArrayList<>();
-        while (s.hasNextLine()) {
-            lines.add(s.nextLine());
-        }
-
-        while (true) {
-            for (int i = 0; i < lines.size(); i++) {
-                if(i != 0) {
-                    StringBuilder line_before = new StringBuilder(lines.get(i - 1));
-                }
-                StringBuilder cur_line = new StringBuilder(lines.get(i));
-                if(i != 96) {
-                    StringBuilder line_after = new StringBuilder(lines.get(i + 1));
-                }
-                for (int j = 0; i < 92; i++) {
-                    if (cur_line.charAt(j) == 'L'){
-                        cur_line.setCharAt(j,'#');
-                    }else if(cur_line.charAt(j) == '#'){
-                        //int surrounding_seats = check_surroundings(i, j);
-                    }
+        Scanner s = new Scanner(new File("2020/src/Day11/input_day11.txt"));
+        seats = new char[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            if (s.hasNextLine()) {
+                String line = s.nextLine();
+                for (int j = 0; j < cols; j++) {
+                    seats[i][j] = line.charAt(j);
                 }
             }
-
         }
+        part2();
 
 
     }
 
-    /*private static void check_surroundings(int i, int j) {
-        int surroundings = 0;
-        String cur_line = lines.get(i);
-        String line_before = "", line_after = "";
-        if(i != 0){
-            line_before = lines.get(i-1);
-        }if(i != 96){
-            line_after = lines.get(i+1);
+    private static void part1() {
+        int rounds = 0;
+
+        while (rounds < 500) {
+            char[][] seats_old = Arrays.stream(seats).map(char[]::clone).toArray(char[][]::new);
+
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    if (seats_old[i][j] == 'L') {
+                        int surrounding_seats = check_surroundings(i, j, seats_old);
+                        if (surrounding_seats == 0) {
+                            seats[i][j] = '#';
+                        }
+                    } else if (seats_old[i][j] == '#') {
+                        int surrounding_seats = check_surroundings(i, j, seats_old);
+                        if (surrounding_seats > 3) {
+                            seats[i][j] = 'L';
+                        }
+                    }
+                }
+            }
+            rounds++;
         }
-        if(line_before.charAt(j-1) == '#');
-    }*/
+
+        int final_occupied = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (seats[i][j] == '#') {
+                    final_occupied++;
+                }
+            }
+        }
+        System.out.println("Part 1:");
+        System.out.println("Result " + final_occupied + " after Round " + rounds);
+    }
+
+    private static void part2() {
+        int rounds = 0;
+
+        while (rounds < 100) {
+            char[][] seats_old = Arrays.stream(seats).map(char[]::clone).toArray(char[][]::new);
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    if (seats_old[i][j] == 'L') {
+                        int surrounding_seats = check_Allsurroundings(i, j, seats_old);
+                        if (surrounding_seats == 0) {
+                            seats[i][j] = '#';
+                        }
+                    } else if (seats_old[i][j] == '#') {
+                        int surrounding_seats = check_Allsurroundings(i, j, seats_old);
+                        if (surrounding_seats > 4) {
+                            seats[i][j] = 'L';
+                        }
+                    }
+                }
+            }
+            rounds++;
+
+        }
+
+        System.out.println(Arrays.deepToString(seats).replace("], ", "]\n"));
+
+        int final_occupied = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (seats[i][j] == '#') {
+                    final_occupied++;
+                }
+            }
+        }
+
+        System.out.println("Part 2:");
+        System.out.println("Result " + final_occupied + " after Round " + rounds);
+    }
+
+    private static int check_surroundings(int i, int j, char[][] seats_old) {
+        int occupied = 0;
+        if (i > 0) {
+            for (int temp_j = j - 1; temp_j < j + 2; temp_j++) {
+                try {
+                    if (seats_old[i - 1][temp_j] == '#') {
+                        occupied++;
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }
+        try {
+            if (seats_old[i][j + 1] == '#') {
+                occupied++;
+            }
+        } catch (Exception e) {
+        }
+        try {
+            if (seats_old[i][j - 1] == '#') {
+                occupied++;
+            }
+        } catch (Exception e) {
+        }
+        if (j < cols) {
+            for (int temp_j = j - 1; temp_j < j + 2; temp_j++) {
+                try {
+                    if (seats_old[i + 1][temp_j] == '#') {
+                        occupied++;
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }
+        return occupied;
+    }
+
+    private static int check_Allsurroundings(int i, int j, char[][] seats_old) {
+        int occupied = 0;
+        //left
+        for (int temp_j = j - 1; temp_j >= 0; temp_j--) {
+            //try {
+            if (seats_old[i][temp_j] == '#') {
+                occupied++;
+                break;
+            }
+            if (seats_old[i][temp_j] == 'L') {
+                break;
+            }
+/*        } catch(Exception e){
+
+        }*/
+        }
+        //right
+        for (int temp_j = j + 1; temp_j < cols; temp_j++) {
+            //try {
+            if (seats_old[i][temp_j] == '#') {
+                occupied++;
+                break;
+            }
+            if (seats_old[i][temp_j] == 'L') {
+                break;
+            }
+//        } catch(Exception e){
+        }
+
+        //top
+        for (int temp_i = i - 1; temp_i >= 0; temp_i--) {
+            //try {
+            if (seats_old[temp_i][j] == '#') {
+                occupied++;
+                break;
+            }
+            if (seats_old[temp_i][j] == 'L') {
+                break;
+            }
+//        } catch(Exception e){
+        }
+
+        //bottom
+        for (int temp_i = i + 1; temp_i < rows; temp_i++) {
+            //try {
+            if (seats_old[temp_i][j] == '#') {
+                occupied++;
+                break;
+            }
+            if (seats_old[temp_i][j] == 'L') {
+                break;
+            }
+//        } catch(Exception e){
+        }
+
+        //leftbottom
+        int temp_j = j;
+        for (int temp_i = i + 1; temp_i < rows; temp_i++) {
+            temp_j--;
+            if (temp_j <= 0) break;
+            //try {
+            if (seats_old[temp_i][temp_j] == '#') {
+                occupied++;
+                break;
+            }
+            if (seats_old[temp_i][temp_j] == 'L') {
+                break;
+            }
+//        } catch(Exception e){
+        }
+        //lefttop
+        temp_j = j;
+        for (int temp_i = i - 1; temp_i >= 0; temp_i--) {
+            temp_j--;
+            if (temp_j <= 0) break;
+            //try {
+            if (seats_old[temp_i][temp_j] == '#') {
+                occupied++;
+                break;
+            }
+            if (seats_old[temp_i][temp_j] == 'L') {
+                break;
+            }
+//        } catch(Exception e){
+        }
+
+        //righttop
+        temp_j = j;
+        for (int temp_i = i - 1; temp_i >= 0; temp_i--) {
+            temp_j++;
+            if (temp_j >= cols) break;
+            //try {
+            if (seats_old[temp_i][temp_j] == '#') {
+                occupied++;
+                break;
+            }
+            if (seats_old[temp_i][temp_j] == 'L') {
+                break;
+            }
+//        } catch(Exception e){
+        }
+
+        //rightbottom
+        temp_j = j;
+        for (int temp_i = i + 1; temp_i < rows; temp_i++) {
+            temp_j++;
+            if (temp_j >= cols) break;
+            //try {
+            if (seats_old[temp_i][temp_j] == '#') {
+                occupied++;
+                break;
+            }
+            if (seats_old[temp_i][temp_j] == 'L') {
+                break;
+            }
+//        } catch(Exception e){
+        }
+
+        return occupied;
+
+    }
 }
