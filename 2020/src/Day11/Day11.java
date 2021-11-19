@@ -22,8 +22,6 @@ public class Day11 {
             }
         }
         part2();
-
-
     }
 
     private static void part1() {
@@ -50,14 +48,8 @@ public class Day11 {
             rounds++;
         }
 
-        int final_occupied = 0;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (seats[i][j] == '#') {
-                    final_occupied++;
-                }
-            }
-        }
+        int final_occupied = countOccupied();
+
         System.out.println("Part 1:");
         System.out.println("Result " + final_occupied + " after Round " + rounds);
     }
@@ -65,29 +57,39 @@ public class Day11 {
     private static void part2() {
         int rounds = 0;
 
-        while (rounds < 100) {
+        while (rounds < 200) {
             char[][] seats_old = Arrays.stream(seats).map(char[]::clone).toArray(char[][]::new);
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
+                    int surrounding_seats = check_Allsurroundings(i, j, seats_old);
                     if (seats_old[i][j] == 'L') {
-                        int surrounding_seats = check_Allsurroundings(i, j, seats_old);
                         if (surrounding_seats == 0) {
                             seats[i][j] = '#';
                         }
                     } else if (seats_old[i][j] == '#') {
-                        int surrounding_seats = check_Allsurroundings(i, j, seats_old);
                         if (surrounding_seats > 4) {
                             seats[i][j] = 'L';
                         }
                     }
                 }
             }
+            System.out.println("----------------------------------------------------------");
+            System.out.println("Round " + rounds);
+            System.out.println(Arrays.deepToString(seats).replace("], ", "]\n"));
+
             rounds++;
 
         }
 
         System.out.println(Arrays.deepToString(seats).replace("], ", "]\n"));
 
+        int final_occupied = countOccupied();
+
+        System.out.println("Part 2:");
+        System.out.println("Result " + final_occupied + " after Round " + rounds);
+    }
+
+    private static int countOccupied() {
         int final_occupied = 0;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -96,9 +98,7 @@ public class Day11 {
                 }
             }
         }
-
-        System.out.println("Part 2:");
-        System.out.println("Result " + final_occupied + " after Round " + rounds);
+        return final_occupied;
     }
 
     private static int check_surroundings(int i, int j, char[][] seats_old) {
@@ -142,7 +142,6 @@ public class Day11 {
         int occupied = 0;
         //left
         for (int temp_j = j - 1; temp_j >= 0; temp_j--) {
-            //try {
             if (seats_old[i][temp_j] == '#') {
                 occupied++;
                 break;
@@ -150,13 +149,9 @@ public class Day11 {
             if (seats_old[i][temp_j] == 'L') {
                 break;
             }
-/*        } catch(Exception e){
-
-        }*/
         }
         //right
         for (int temp_j = j + 1; temp_j < cols; temp_j++) {
-            //try {
             if (seats_old[i][temp_j] == '#') {
                 occupied++;
                 break;
@@ -164,12 +159,10 @@ public class Day11 {
             if (seats_old[i][temp_j] == 'L') {
                 break;
             }
-//        } catch(Exception e){
         }
 
         //top
         for (int temp_i = i - 1; temp_i >= 0; temp_i--) {
-            //try {
             if (seats_old[temp_i][j] == '#') {
                 occupied++;
                 break;
@@ -177,12 +170,10 @@ public class Day11 {
             if (seats_old[temp_i][j] == 'L') {
                 break;
             }
-//        } catch(Exception e){
         }
 
         //bottom
         for (int temp_i = i + 1; temp_i < rows; temp_i++) {
-            //try {
             if (seats_old[temp_i][j] == '#') {
                 occupied++;
                 break;
@@ -190,7 +181,6 @@ public class Day11 {
             if (seats_old[temp_i][j] == 'L') {
                 break;
             }
-//        } catch(Exception e){
         }
 
         //leftbottom
@@ -198,7 +188,6 @@ public class Day11 {
         for (int temp_i = i + 1; temp_i < rows; temp_i++) {
             temp_j--;
             if (temp_j <= 0) break;
-            //try {
             if (seats_old[temp_i][temp_j] == '#') {
                 occupied++;
                 break;
@@ -206,14 +195,12 @@ public class Day11 {
             if (seats_old[temp_i][temp_j] == 'L') {
                 break;
             }
-//        } catch(Exception e){
         }
         //lefttop
         temp_j = j;
         for (int temp_i = i - 1; temp_i >= 0; temp_i--) {
             temp_j--;
             if (temp_j <= 0) break;
-            //try {
             if (seats_old[temp_i][temp_j] == '#') {
                 occupied++;
                 break;
@@ -221,7 +208,6 @@ public class Day11 {
             if (seats_old[temp_i][temp_j] == 'L') {
                 break;
             }
-//        } catch(Exception e){
         }
 
         //righttop
@@ -229,7 +215,6 @@ public class Day11 {
         for (int temp_i = i - 1; temp_i >= 0; temp_i--) {
             temp_j++;
             if (temp_j >= cols) break;
-            //try {
             if (seats_old[temp_i][temp_j] == '#') {
                 occupied++;
                 break;
@@ -237,7 +222,6 @@ public class Day11 {
             if (seats_old[temp_i][temp_j] == 'L') {
                 break;
             }
-//        } catch(Exception e){
         }
 
         //rightbottom
@@ -245,7 +229,6 @@ public class Day11 {
         for (int temp_i = i + 1; temp_i < rows; temp_i++) {
             temp_j++;
             if (temp_j >= cols) break;
-            //try {
             if (seats_old[temp_i][temp_j] == '#') {
                 occupied++;
                 break;
@@ -253,10 +236,7 @@ public class Day11 {
             if (seats_old[temp_i][temp_j] == 'L') {
                 break;
             }
-//        } catch(Exception e){
         }
-
         return occupied;
-
     }
 }
