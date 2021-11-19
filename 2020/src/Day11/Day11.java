@@ -187,7 +187,7 @@ public class Day11 {
         int temp_j = j;
         for (int temp_i = i + 1; temp_i < rows; temp_i++) {
             temp_j--;
-            if (temp_j <= 0) break;
+            if (temp_j < 0) break;
             if (seats_old[temp_i][temp_j] == '#') {
                 occupied++;
                 break;
@@ -200,7 +200,7 @@ public class Day11 {
         temp_j = j;
         for (int temp_i = i - 1; temp_i >= 0; temp_i--) {
             temp_j--;
-            if (temp_j <= 0) break;
+            if (temp_j < 0) break;
             if (seats_old[temp_i][temp_j] == '#') {
                 occupied++;
                 break;
