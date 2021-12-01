@@ -16,22 +16,25 @@ public class Day14 {
         while (s.hasNextLine()) {
             lines.add(s.nextLine());
         }
-        int line = 0;
+        int line_no = 0;
         long sum = 0;
         while (true) {
-            String mask = lines.get(line).replace("mask = ", "");
-            System.out.println(mask);
+            String mask = "";
+            if (lines.get(line_no).startsWith("mask")) {
+                mask = lines.get(line_no).replace("mask = ", "");
+            } else {
+                System.out.println(lines.get(line_no));
+            }
+            line_no++;
             String[] result = new String[100000];
-            line++;
             //Arrays.fill(result, "");
 
-            while (lines.size() > line && lines.get(line).startsWith("mem")) {
-                String[] line_arr = lines.get(line).split("]");
+            while (lines.size() > line_no && lines.get(line_no).startsWith("mem")) {
+                String[] line_arr = lines.get(line_no).split("]");
                 int mem_addr = Integer.parseInt(line_arr[0].split("\\[")[1]);
                 int val = Integer.parseInt(line_arr[1].replace(" = ", ""));
                 String val_byte = Integer.toBinaryString(val);
                 val_byte = padLeftZeros(val_byte, 36);
-                System.out.println(val_byte);
                 result[mem_addr] = "";
                 for (int pos = 0; pos < mask.length(); pos++) {
                     if (mask.charAt(pos) == '0') {
@@ -44,19 +47,18 @@ public class Day14 {
                         result[mem_addr] = result[mem_addr] + val_byte.charAt(pos);
                     }
                 }
-                line++;
+                line_no++;
 
             }
             for (int i = 0; i < result.length; i++) {
                 if (!Objects.equals(result[i], null)) {
-                    System.out.println(result[i]);
                     long dec = Long.parseLong(result[i], 2);
                     sum = sum + dec;
                 }
             }
             System.out.println(sum);
 
-            if (lines.size() < line + 1) break;
+            if (lines.size() < line_no + 1) break;
         }
         System.out.println(sum);
     }
