@@ -1,6 +1,5 @@
 import re
 
-
 lines = [x for x in open("2021/Day2/input_2.txt").read().rsplit("\n")]
 
 
