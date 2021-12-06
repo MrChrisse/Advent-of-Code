@@ -18,15 +18,18 @@ def solve(inp):
 
     win_board = None
     win_calls = None
+    won_counter = 0
 
     for i in range(1, len(sequence)):
         calls = set(sequence[:i])
 
         for board in boards:
             if wins(board, calls):
+                won_counter += 1
                 win_board = board
                 win_calls = sequence[:i]
-                break
+                if won_counter > 99:
+                    break
         else:
             continue
         break
@@ -37,7 +40,9 @@ def solve(inp):
             if win_board[i][j] not in win_calls:
                 unmarked += win_board[i][j]
 
-    print(unmarked * win_calls[-1])
+    print(unmarked)
+    print(win_calls[-1])
+    return unmarked * win_calls[-1]
 
 
 print(solve(open("2021/Day4/input.txt").read()))
