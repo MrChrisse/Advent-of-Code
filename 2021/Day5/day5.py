@@ -4,7 +4,7 @@ from collections import defaultdict
 lines = [x for x in open("2021/Day5/input.txt").read().rsplit("\n")]
 
 
-def sol_1():
+def sol():
     arr = [[0 for i in range(1000)] for j in range(1000)]
 
     for line in lines:
@@ -36,7 +36,7 @@ def sol_1():
         for j in range(999):
             if arr[i][j] > 1:
                 result_1 += 1
-    return result_1
+    print(result_1)
 
     G1 = defaultdict(int)
     G2 = defaultdict(int)
@@ -62,4 +62,4 @@ def sol_1():
     return len([k for k in G1 if G1[k] > 1])
 
 
-print(sol_1())
+print(sol())
