@@ -19,4 +19,4 @@ def sol_2():
 
 
 print("Solution 1: " + str(sol_1()))
-print("Solution 1: " + str(sol_2()))
+print("Solution 2: " + str(sol_2()))
